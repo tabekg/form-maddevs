@@ -17,6 +17,7 @@ $router->group([
 ], function() use ($router){
     $router->post('user/register', 'UserController@register');
     $router->post('user/login', 'UserController@login');
+    $router->post('user/check', 'UserController@check');
 });
 
 $router->group([
@@ -24,14 +25,12 @@ $router->group([
     'prefix' => 'api/v1',
     'middleware' => ['auth']
 ], function() use ($router){
-    $router->post('user/check', 'UserController@check');
-
     $resful = ['topic', 'post'];
 
     foreach($resful as $value){
     	$router->get($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@get');
-	    $router->put($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@create');
-	    $router->post($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@update');
+	    $router->put($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@update');
+	    $router->post($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@create');
 	    $router->delete($value, strtoupper(substr($value, 0, 1)) . substr($value, 1, strlen($value) - 1) . 'Controller@delete');
     }
 });

@@ -45,6 +45,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException){
+            return ['status' => 'invalid_params', 'data' => $exception->getResponse()->original];
+        }
         return parent::render($request, $exception);
     }
 }
