@@ -20,7 +20,7 @@ class TopicController extends Controller {
         $take = $request->has('take') ? $request->get('take') : 10;
         $skip = $request->has('skip') ? $request->get('skip') : 0;
 
-        return Topic::take($take)->skip($skip)->orderBy('id', 'desc')->get();
+        return $this->_response('success', Topic::take($take)->skip($skip)->orderBy('id', 'desc')->get());
     }
 
     public function create(Request $request){
@@ -28,12 +28,12 @@ class TopicController extends Controller {
             'title' => 'required|string|max:250'
         ]);
 
-        if (Topic::where('title', $request->get('title'))->count() === 0){
-            $topic = new Topic;
-            $topic->user_id = $request->user()->id;
-            $topic->title = $request->get('title');
-            if ($topic->save()) return $this->_response('success', $topic);
-        } else return $this->_response('topic_exists');
+        if (Topic::where('title', $request->get('title'))->count() > 0) return $this->_response('topic_exists');
+        
+        $topic = new Topic;
+        $topic->user_id = $request->user()->id;
+        $topic->title = $request->get('title');
+        if ($topic->save()) return $this->_response('success', $topic);
 
         return $this->_error();
     }
@@ -46,12 +46,12 @@ class TopicController extends Controller {
 
         $topic = Topic::find($request->get('id'));
 
-        if ($topic != null){
-            if (Gate::allows('update-topic', $topic)){
-                $topic->title = $request->get('title');
-                if ($topic->save()) return $this->_response('success', $topic);
-            } else return $this->_response('access_danied');
-        } else return $this->_response('topic_not_found');
+        if ($topic == null) return $this->_response('topic_not_found');
+        
+        if (Gate::denies('update-topic', $topic)) return $this->_response('access_denied');
+        
+        $topic->title = $request->get('title');
+        if ($topic->save()) return $this->_response('success', $topic);
 
         return $this->_error();
     }
@@ -63,11 +63,10 @@ class TopicController extends Controller {
 
         $topic = Topic::find($request->get('id'));
 
-        if ($topic != null){
-            if (Gate::allows('delete-topic', $topic)){
-                if ($topic->delete()) return $this->_response('success');
-            } else return $this->_response('access_danied');
-        } else return $this->_response('topic_not_found');
+        if ($topic == null) return $this->_response('topic_not_found');
+        if (Gate::denies('delete-topic', $topic)) return $this->_response('access_denied');
+        
+        if ($topic->delete()) return $this->_response('success');
 
         return $this->_error();
     }
