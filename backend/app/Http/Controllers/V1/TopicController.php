@@ -50,7 +50,7 @@ class TopicController extends Controller {
             if (Gate::allows('update-topic', $topic)){
                 $topic->title = $request->get('title');
                 if ($topic->save()) return $this->_response('success', $topic);
-            } else return $this->_response('access_danied');
+            } else return $this->_response('access_denied');
         } else return $this->_response('topic_not_found');
 
         return $this->_error();
@@ -66,7 +66,7 @@ class TopicController extends Controller {
         if ($topic != null){
             if (Gate::allows('delete-topic', $topic)){
                 if ($topic->delete()) return $this->_response('success');
-            } else return $this->_response('access_danied');
+            } else return $this->_response('access_denied');
         } else return $this->_response('topic_not_found');
 
         return $this->_error();

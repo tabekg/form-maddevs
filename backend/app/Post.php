@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
-class Topic extends Model {
+class Post extends Model {
     protected $fillable = [
-        'title',
+        'text',
     ];
 
     protected $appends = [
@@ -16,9 +16,5 @@ class Topic extends Model {
 
     public function getUserAttribute(){
     		return User::find($this->attributes['user_id']);
-    }
-
-    public function posts(){
-    	return $this->hasMany('\App\Post');
     }
 }
