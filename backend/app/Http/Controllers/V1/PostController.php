@@ -26,7 +26,7 @@ class PostController extends Controller {
         $take = $request->has('take') ? $request->get('take') : 10;
         $skip = $request->has('skip') ? $request->get('skip') : 0;
 
-        return $topic->posts()->take($take)->skip($skip)->orderBy('id', 'desc')->get();
+        return $this->_response('success', $topic->posts()->take($take)->skip($skip)->orderBy('id', 'desc')->get());
     }
 
     public function create(Request $request){
