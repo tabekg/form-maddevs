@@ -1,0 +1,8 @@
+.topic-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.topic {
+  margin-bottom: 30px;
+}

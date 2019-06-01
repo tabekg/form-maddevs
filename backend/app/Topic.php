@@ -11,14 +11,18 @@ class Topic extends Model {
     ];
 
     protected $appends = [
-    	'user'
+    	'user', 'postsCount'
     ];
 
     public function getUserAttribute(){
-    		return User::find($this->attributes['user_id']);
+    	return User::find($this->attributes['user_id']);
     }
 
     public function posts(){
     	return $this->hasMany('\App\Post');
+    }
+
+    public function getPostsCountAttribute(){
+        return \App\Post::where('topic_id', $this->attributes['id'])->count();
     }
 }
